@@ -1,0 +1,29 @@
+function setSliders(response) {
+    var tabNum = response.tabNumber;
+    $('#content-tab'+tabNum).find('.slider100').each(function(){
+      $(this).slider("option", "min", -5);
+      $(this).slider("option", "max", 100);
+      $(this).slider("option", "value", 0);
+      //$(this).removeAttr('title');
+      $(this).find('.ui-slider-handle .tooltip').remove();
+    });
+
+    //Set the values
+    $.each( response.filteredData, function( key, data ) {
+      //console.log(key);
+      if($('#'+key+'Slider'+'-'+tabNum).length && data != null)
+      {
+          $('#'+key+'Slider'+'-'+tabNum).removeClass('overlay');
+        var calulatedMax = data.min + 3*(data.max - data.min);
+        var orgVal = data.value;
+        if(key == "hdl" || key == "ccp_hdl"){data.value = (data.min + 4*(data.max - data.min)) - data.value; }
+        $('#'+key+'Slider'+'-'+tabNum).slider({ orientation: 'vertical', min: data.min, max: calulatedMax, step: 0.1, value: data.value });
+        //$('#'+key+'Slider'+'-'+tabNum).attr('title',"Your value is "+ orgVal);
+        $('#'+key+'Slider'+'-'+tabNum).find('.ui-slider-handle').prepend('<div class="tooltip"><span>' + orgVal + '</span></div>');
+
+        //console.log(key+'Slider ' + 'min:'+ data.min+' max:'+calulatedMax + ' value:' +data.value + ' Org value:' + orgVal);
+
+      }
+
+    });
+}
